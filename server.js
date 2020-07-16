@@ -7,13 +7,14 @@ const hbs = require('express-handlebars');
 const app = express();
 app.engine('.hbs', hbs());
 app.set('view engine', '.hbs');
+app.use(express.urlencoded({ extended: false}));
+app.use(express.json());
 
 app.use(express.static(path.join(__dirname, '/public'))); 
 
 app.engine('hbs', hbs({ extname: 'hbs', layoutsDir: './layouts', defaultLayout: 'main' }));
 
-app.use(express.urlencoded({ extended: false}));
-app.use(express.json());
+
 
 
 app.get('/', (req, res) => {
@@ -42,10 +43,10 @@ app.get('/hello/:name', (req, res) => {
 
 app.post('/contact/send-message', (req, res) => {
   
-  const { author, sender, title, message } = req.body;
+  const { author, sender, title, file, message} = req.body;
 
-  if(author && sender && title && message) {
-    res.render('contact', {isSent: true});
+  if(author && sender && title && file && message) {
+    res.render('contact', {isSent: true, fileName: file });
   }
   else {
     res.render('contact', {isError: true});
